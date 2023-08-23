@@ -57,12 +57,14 @@ task runFrac(type: JavaExec) {
   group 'Fraction Tasks'
   description 'Tasks which runs Fraction with 2 arguments'
 
-  if(project.hasProperty('num')){
-  args(num)
-}
-  if(project.hasProperty('denom')){
-  args(denom)
-}
+  if(project.hasProperty("num")){
+  args findProperty("num")
+} else args '2'
+
+  if(project.hasProperty("denom")){
+  args findProperty("denom")
+} else args '3'
+
  classpath = sourceSets.main.runtimeClasspath
   main = 'Fraction'
 }
