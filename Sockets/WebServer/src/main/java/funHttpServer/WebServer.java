@@ -18,6 +18,7 @@ package funHttpServer;
 
 import java.io.*;
 import java.net.*;
+import org.json.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -209,13 +210,105 @@ class WebServer {
           Integer result = num1 * num2;
 
           // Generate response
+          if (result == num1 * num2 && num1 != null && num2 != null && result != null){
           builder.append("HTTP/1.1 200 OK\n");
           builder.append("Content-Type: text/html; charset=utf-8\n");
           builder.append("\n");
           builder.append("Result is: " + result);
+        } else {
+          builder.append("HTTP/1.1 403 Bad Request\n");
+          builder.append("Content-Type: text/html; charset=utf-8\n");
+          builder.append("\n");
+          builder.append("Incorrect input!");
+        }
 
           // TODO: Include error handling here with a correct error code and
           // a response that makes sense
+
+      } else if(request.contains("guess?")) {
+          
+
+          Map<String, String> query_pairs = new LinkedHashMap<String, String>();
+          query_pairs = splitQuery(request.replace("guess?", ""));
+
+          Integer num1 = Integer.parseInt(query_pairs.get("num1"));
+          Integer num2 = Integer.parseInt(query_pairs.get("num2"));
+
+          // guess a number between 1 - 10
+          Random random = new Random();
+          int radm = 0;
+          while (true){
+          radm = random.nextInt(11);
+          if (radm != 0){
+            break;
+          }
+        }
+        
+
+          if (num1 == radm && num1 != null && num1 > 0 && num1 <= 10){
+          builder.append("HTTP/1.1 200 OK\n");
+          builder.append("Content-Type: text/html; charset=utf-8\n");
+          builder.append("\n");
+          builder.append("Great guess!");
+          } else if (num1 != radm && num1 != null && num1 > 0 && num1 <= 10){
+          builder.append("HTTP/1.1 200 OK\n");
+          builder.append("Content-Type: text/html; charset=utf-8\n");
+          builder.append("\n");
+          builder.append("Nice try, but incorrect guess!");
+          } else if (num1 == 11 && num1 != null){
+          builder.append("HTTP/1.1 200 OK\n");
+          builder.append("Content-Type: text/html; charset=utf-8\n");
+          builder.append("\n");
+          builder.append("You chose 11 for testing purposes!"); 
+          } else if (num2 == radm && num2 != null && num2 > 0 && num2 <= 10){
+          builder.append("HTTP/1.1 200 OK\n");
+          builder.append("Content-Type: text/html; charset=utf-8\n");
+          builder.append("\n");
+          builder.append("Great guess!");
+          } else if (num2 != radm && num2 != null && num2 > 0 && num2 <= 10){
+          builder.append("HTTP/1.1 200 OK\n");
+          builder.append("Content-Type: text/html; charset=utf-8\n");
+          builder.append("\n");
+          builder.append("Nice try, but incorrect guess!");
+          } else if (num2 == 11 && num2 != null){
+          builder.append("HTTP/1.1 200 OK\n");
+          builder.append("Content-Type: text/html; charset=utf-8\n");
+          builder.append("\n");
+          builder.append("You chose 11 for testing purposes!"); 
+          } else {
+          builder.append("HTTP/1.1 400 Bad Request\n");
+          builder.append("Content-Type: text/html; charset=utf-8\n");
+          builder.append("\n");
+          builder.append("You need to pick a number between 1 and 10!");
+          }
+          // A task where the user receives the distance of two numbers
+        } else if(request.contains("distance?")) {
+
+          Map<String, String> query_pairs = new LinkedHashMap<String, String>();
+          query_pairs = splitQuery(request.replace("distance?", ""));
+
+          Integer num1 = Integer.parseInt(query_pairs.get("num1"));
+          Integer num2 = Integer.parseInt(query_pairs.get("num2"));
+
+          //distance between the two numbers
+          Integer result = 0;
+          if (num1 > num2){
+            result = num1 - num2;
+          } else{
+            result = num2 - num1;
+          }
+
+          if (result == num1 - num2 || result == num2 - num1 && num1 != null && num2 != null && result != null){
+          builder.append("HTTP/1.1 200 OK\n");
+          builder.append("Content-Type: text/html; charset=utf-8\n");
+          builder.append("\n");
+          builder.append("The distance of the two numbers are: " + result);
+          } else {
+          builder.append("HTTP/1.1 403 Bad Request\n");
+          builder.append("Content-Type: text/html; charset=utf-8\n");
+          builder.append("\n");
+          builder.append("Incorrect input!");
+          }
 
         } else if (request.contains("github?")) {
           // pulls the query from the request and runs it with GitHub's REST API
@@ -238,6 +331,12 @@ class WebServer {
           // TODO: Parse the JSON returned by your fetch and create an appropriate
           // response based on what the assignment document asks for
 
+          JSONObject newObj = new JSONObject(json);
+          System.out.println(newObj.getString("login"));
+          System.out.println(newObj.getString("name"));
+          System.out.println(newObj.getString("full_name"));
+          System.out.println(newObj.getString("id"));
+
         } else {
           // if the request is not recognized at all
 
@@ -257,6 +356,8 @@ class WebServer {
 
     return response;
   }
+
+
 
   /**
    * Method to read in a query and split it up correctly
