@@ -281,7 +281,7 @@ class WebServer {
           builder.append("\n");
           builder.append("You need to pick a number between 1 and 10!");
           }
-          // A task where the user receives the distance of two numbers
+          // A task where the user receives the pythagorean total
         } else if(request.contains("distance?")) {
 
           Map<String, String> query_pairs = new LinkedHashMap<String, String>();
@@ -302,7 +302,7 @@ class WebServer {
           builder.append("HTTP/1.1 200 OK\n");
           builder.append("Content-Type: text/html; charset=utf-8\n");
           builder.append("\n");
-          builder.append("The distance of the two numbers are: " + result);
+          builder.append("The distance between the two numbers are: " + result);
           } else {
           builder.append("HTTP/1.1 403 Bad Request\n");
           builder.append("Content-Type: text/html; charset=utf-8\n");
